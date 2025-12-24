@@ -276,7 +276,8 @@ required-features = ["ort-opencv-compat"]
 
 [dependencies]
 lazy_static = "1.5.0"
-ndarray = "0.16"
+ndarray = "0.17"
+anyhow = "1.0"
 
 # OpenCV backend (dnn feature is added via opencv-backend feature flag to avoid conflicts with ORT)
 opencv = { version = "0.98.0", default-features = false, features = ["imgcodecs", "imgproc"], optional = true }
@@ -286,4 +287,5 @@ ort = { version = "2.0.0-rc.10", optional = true }
 image = { version = "0.25", optional = true }
 
 [patch.crates-io]
-cc = { git = "https://github.com/rust-lang/cc-rs.git", version = "1.0", tag = "1.0.79" }
+#cc = { git = "https://github.com/rust-lang/cc-rs.git", version = "1.0", tag = "1.0.79" }
+ort = { git = "https://github.com/pykeio/ort", rev = "38573e05291c2a20888806fffe0eb30df4fe7e50" }
