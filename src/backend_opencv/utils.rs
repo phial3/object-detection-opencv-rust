@@ -1,41 +1,41 @@
-use opencv::{
-    dnn::DNN_BACKEND_OPENCV,
-    dnn::DNN_BACKEND_INFERENCE_ENGINE,
-    dnn::DNN_BACKEND_HALIDE,
-    dnn::DNN_BACKEND_CUDA,
-    dnn::DNN_TARGET_CPU,
-    dnn::DNN_TARGET_OPENCL,
-    dnn::DNN_TARGET_OPENCL_FP16,
-    dnn::DNN_TARGET_MYRIAD,
-    dnn::DNN_TARGET_FPGA,
-    dnn::DNN_TARGET_CUDA,
-    dnn::DNN_TARGET_CUDA_FP16,
-    dnn::DNN_TARGET_HDDL,
-};
-use std::collections::{HashMap, HashSet};
-use std::iter::FromIterator;
 use super::model_format::{
     ModelFormat,
     ModelVersion
 };
-use lazy_static::lazy_static;
+use opencv::{
+    dnn::DNN_BACKEND_CUDA,
+    dnn::DNN_BACKEND_HALIDE,
+    dnn::DNN_BACKEND_INFERENCE_ENGINE,
+    dnn::DNN_BACKEND_OPENCV,
+    dnn::DNN_TARGET_CPU,
+    dnn::DNN_TARGET_CUDA,
+    dnn::DNN_TARGET_CUDA_FP16,
+    dnn::DNN_TARGET_FPGA,
+    dnn::DNN_TARGET_HDDL,
+    dnn::DNN_TARGET_MYRIAD,
+    dnn::DNN_TARGET_OPENCL,
+    dnn::DNN_TARGET_OPENCL_FP16,
+};
+use std::collections::{HashMap, HashSet};
+use std::iter::FromIterator;
+use std::sync::LazyLock;
 
 // Utilize lazy_static macro to create compatibility table for OpenCV's DNN backends and targets valid combinations
-lazy_static!{
-    pub static ref BACKEND_TARGET_VALID: HashMap<i32, HashSet<i32>> = vec![
+pub static BACKEND_TARGET_VALID: LazyLock<HashMap<i32, HashSet<i32>>> = LazyLock::new(|| {
+    vec![
         (DNN_BACKEND_OPENCV, HashSet::from_iter(vec![DNN_TARGET_CPU, DNN_TARGET_OPENCL, DNN_TARGET_OPENCL_FP16])),
         (DNN_BACKEND_INFERENCE_ENGINE, HashSet::from_iter(vec![DNN_TARGET_CPU, DNN_TARGET_OPENCL, DNN_TARGET_OPENCL_FP16, DNN_TARGET_MYRIAD, DNN_TARGET_FPGA, DNN_TARGET_HDDL])),
         (DNN_BACKEND_HALIDE, HashSet::from_iter(vec![DNN_TARGET_CPU, DNN_TARGET_OPENCL])),
         (DNN_BACKEND_CUDA, HashSet::from_iter(vec![DNN_TARGET_CUDA, DNN_TARGET_CUDA_FP16])),
-    ].into_iter().collect();
-}
+    ].into_iter().collect()
+});
 
-lazy_static!{
-    pub static ref FORMAT_VERSION_VALID: HashMap<ModelFormat, HashSet<ModelVersion>> = vec![
+pub static FORMAT_VERSION_VALID: LazyLock<HashMap<ModelFormat, HashSet<ModelVersion>>> = LazyLock::new(|| {
+    vec![
         (ModelFormat::Darknet, HashSet::from_iter(vec![ModelVersion::V3, ModelVersion::V4, ModelVersion::V7])),
         (ModelFormat::ONNX, HashSet::from_iter(vec![ModelVersion::V4, ModelVersion::V8])),
-    ].into_iter().collect();
-}
+    ].into_iter().collect()
+});
 
 
 /// Implementation of minMaxLoc in OpenCV (see the ref. https://docs.opencv.org/4.8.0/d2/de8/group__core__array.html#gab473bf2eb6d14ff97e89b355dac20707) basically.

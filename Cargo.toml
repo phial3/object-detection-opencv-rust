@@ -275,7 +275,6 @@ name = "yolo_v8_s_ort_opencv"
 required-features = ["ort-opencv-compat"]
 
 [dependencies]
-lazy_static = "1.5.0"
 ndarray = "0.17"
 anyhow = "1.0"
 
